@@ -25,6 +25,7 @@ FetchContent_MakeAvailable(imgui glfw)
 
 set(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
+
 find_package(OpenCV REQUIRED)
 
 add_subdirectory(solver-rc)
