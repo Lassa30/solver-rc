@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd build
+
+cmake --fresh .. &&
+cmake --build . &&
+./solver-rc/solver-rc;
+
+cd - > /dev/null
