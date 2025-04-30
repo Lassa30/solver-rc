@@ -1,9 +1,25 @@
 #!/bin/bash
 
 cd build
+if [ ! $# -eq 1 ];then
+    echo "Provide only -b OR -r keys"
+    exit 1
+fi
 
-cmake --fresh .. &&
-cmake --build . &&
-./solver-rc/solver-rc;
+if [ $1 = "-b" ];
+then
+    cmake --build . &&
+    ./solver-rc/solver-rc
+elif [ $1 = "-B" ];
+then
+    cmake --fresh .. &&
+    cmake --build . &&
+    ./solver-rc/solver-rc;
+elif [ $1 = "-r" ];
+then
+    ./solver-rc/solver-rc;
+else
+    exit 1
+fi
 
 cd - > /dev/null

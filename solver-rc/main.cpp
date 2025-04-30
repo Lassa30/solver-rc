@@ -1,79 +1,83 @@
-#include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
 
+#include <GL/gl.h>
+#include <GLFW/glfw3.h>
+
+#include <chrono>
+#include <iostream>
+#include <random>
+
+// random setup
+std::random_device rd;  // a seed source for the random number engine
+std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+std::uniform_real_distribution<> distrib(0, 1);
+
+static void glfw_error_callback(int error, const char *description) {
+  std::cout << (stderr, "GLFW Error %d: %s\n", error, description);
+}
+
+void do_render() {
+  auto x = distrib(gen);
+  auto r = distrib(gen);
+  auto g = distrib(gen);
+  auto b = distrib(gen);
+  auto a = distrib(gen);
+
+  glClearColor(0.45f, 0.55f, 0.60f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  glBegin(GL_QUADS);
+  glColor4f(r, g, b, a);
+  glVertex3f(-x, x, 0);
+  glVertex3f(x, x, 0);
+  glVertex3f(x, -x, 0);
+  glVertex3f(-x, -x, 0);
+  glEnd();
+}
+
 int main() {
-  // Initialize GLFW
+  // glfw setup
+  glfwSetErrorCallback(glfw_error_callback);
   if (!glfwInit()) {
-    return -1;
+    return 1;
   }
-
-  // Create a normal-sized GLFW window
-  GLFWwindow *window = glfwCreateWindow(1280, 720, "solver-rc", nullptr,
-                                        nullptr); // Not fullscreen
+  GLFWwindow *window =
+      glfwCreateWindow(800, 800, "Rubik's cube", nullptr, nullptr);
   if (!window) {
-    glfwTerminate();
-    return -1;
+    return 1;
   }
-
   glfwMakeContextCurrent(window);
   glfwSwapInterval(1); // Enable vsync
 
-  // Initialize ImGui
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO &io = ImGui::GetIO();
-  (void)io;
-  ImGui::StyleColorsDark();
+  // fix: it is not working properly, when I do it with glad...
+  // int version = gladLoadGL(glfwGetProcAddress);
 
-  // Set up ImGui bindings
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
-  ImGui_ImplOpenGL3_Init("#version 130");
+  // it seems useless until everything is happening inside the window
+  // glViewport(0, 0, 400, 300);
 
   // Main render loop
+  auto previous_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::milliseconds render_interval(3000);
+
+  std::cout << previous_time << '\n';
+  bool isFirstFrame = true;
   while (!glfwWindowShouldClose(window)) {
+    auto current_time = std::chrono::high_resolution_clock::now();
+    if (isFirstFrame || (current_time - previous_time >= render_interval)) {
+      do_render();
+      glfwSwapBuffers(window);
+
+      previous_time = current_time;
+      isFirstFrame = false;
+    }
+
+    // Pool
     glfwPollEvents();
-
-    // Get the current window size (for ImGui to match it)
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
-
-    // Start ImGui frame
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    // Set ImGui window size to match GLFW window size (fullscreen within the
-    // GLFW window)
-    ImGui::SetNextWindowSize(
-        ImVec2((float)width, (float)height)); // Fullscreen size
-    ImGui::SetNextWindowPos(ImVec2(0, 0));    // Position at top-left
-    ImGui::Begin("Main Window", nullptr,
-                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove);
-
-    // Display "Hello, World!" text
-    ImGui::Text("Hello, World!");
-
-    ImGui::End();
-
-    // Render ImGui frame
-    ImGui::Render();
-    glClearColor(0.45f, 0.55f, 0.60f, 1.00f); // Clear color (background)
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    // Swap buffers
-    glfwSwapBuffers(window);
   }
 
   // Cleanup
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplGlfw_Shutdown();
-  ImGui::DestroyContext();
-
   glfwDestroyWindow(window);
   glfwTerminate();
 
