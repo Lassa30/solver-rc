@@ -2,9 +2,11 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
 
+// clang-format off
+#include <GL/glxmd.h>
 #include <glad/gl.h>
-
 #include <GLFW/glfw3.h>
+// clang-format on
 
 #include <chrono>
 #include <iostream>
@@ -194,12 +196,15 @@ int main() {
 
   while (!glfwWindowShouldClose(window)) {
     // clang-format off
-    /*set uniforms*/
+    /*set uniforms
+    btw: don't do glGetUniformLocation in the loop
+    */
     glUseProgram(shaderProgram);
 
-    auto dx = distrib(gen) / 2;
+    auto dx = distrib(gen);
     glUniform1f(glGetUniformLocation(shaderProgram, "dx"), dx);
-    auto dy = distrib(gen) / 2;
+
+    auto dy = distrib(gen);
     glUniform1f(glGetUniformLocation(shaderProgram, "dy"), dy);
 
     glUniform1f(glGetUniformLocation(shaderProgram, "time"), time);
@@ -208,7 +213,6 @@ int main() {
     /*rendering*/
     auto curr_time = std::chrono::high_resolution_clock::now();
     if (isFirst || (curr_time - prev_time > timedelta)) {
-      std::cout << "rendering...\n";
       do_render(VAO, VBO);
       glfwSwapBuffers(window);
       prev_time = curr_time;

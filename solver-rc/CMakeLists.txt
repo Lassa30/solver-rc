@@ -18,15 +18,16 @@ add_executable(solver-rc
 )
 
 target_include_directories(solver-rc PRIVATE
-    ${OpenCV_INCLUDE_DIRS}
     ${glad_SOURCE_DIR}
+    ${glm_SOURCE_DIR}
+    ${OpenCV_INCLUDE_DIRS}
 )
-
 
 target_link_libraries(solver-rc PRIVATE
     imgui
     glad
     glfw
     OpenGL::GL
+    glm
     ${OpenCV_LIBS}
 )
