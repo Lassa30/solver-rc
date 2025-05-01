@@ -10,7 +10,7 @@ target_include_directories(imgui PUBLIC
     ${imgui_SOURCE_DIR}
 )
 
-# Executable
+# solver-rc: main
 add_executable(solver-rc
     main.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp

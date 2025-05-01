@@ -51,7 +51,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(imgui glfw glm)
 
+# assuming everybody has OpenGL
 find_package(OpenGL REQUIRED)
+
+# installation required
 find_package(OpenCV REQUIRED)
 
 add_subdirectory(solver-rc)

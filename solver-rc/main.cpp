@@ -3,14 +3,53 @@
 #include <imgui.h>
 
 // clang-format off
-#include <GL/glxmd.h>
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 // clang-format on
 
+#include <array>
 #include <chrono>
 #include <iostream>
 #include <random>
+
+/*
+***************************************************
+*  cube                                           *
+***************************************************
+*/
+
+// clang-format off
+enum class ColorID { Color_1, Color_2, Color_3, Color_4, Color_5, Color_6, Color_None };
+// clang-format on
+
+// struct Colors {
+//   glm::vec4 FrontColor{1.0f, 1.0f, 1.0f, 1.0f};  // White
+//   glm::vec4 BackColor{1.0f, 1.0f, 0.0f, 1.0f};   // Yellow
+//   glm::vec4 RightColor{1.0f, 0.0f, 0.0f, 1.0f};  // Red
+//   glm::vec4 LeftColor{1.0f, 0.5f, 0.0f, 1.0f};   // Orange
+//   glm::vec4 TopColor{0.0f, 0.0f, 1.0f, 1.0f};    // Blue
+//   glm::vec4 BottomColor{0.0f, 1.0f, 0.0f, 1.0f}; // Green
+// };
+
+struct Cubie {
+  /*colors of a cubie:
+  center - 1 color
+  edge - 2 colors
+  corner - 3 colors
+  */
+  std::array<ColorID, 3> colors;
+  glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+
+  Cubie() = default;
+};
+
+class RubiksCube {
+  std::vector<Cubie> cube;
+};
+
+class CubeRenderer;
+class CubieRenderer;
 
 std::random_device rd;
 std::mt19937 gen(rd());
@@ -24,9 +63,9 @@ float r1 = 0;
 float g1 = 1;
 float b1 = 0;
 
-float r2 = 1;
+float r2 = 1.0;
 float g2 = 0;
-float b2 = 0;
+float b2 = 1.0;
 float x = 0.1f;
 
 float Vertices[3][7] = {{-x, x, 0, r1, g1, b1, 1},
@@ -34,7 +73,7 @@ float Vertices[3][7] = {{-x, x, 0, r1, g1, b1, 1},
                         {x, -x, 0, r2, g2, b2, 1}};
 
 void do_render(GLuint VAO, GLuint VBO) {
-  glClearColor(0.45f, 0.55f, 0.60f, 1.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertices), Vertices);
@@ -47,7 +86,10 @@ GLuint compileShaders() {
   vertex shader: sets the position and the color for the each vertex
   */
 
-  /*scale-rotate-translate vertexShader*/
+  /*scale-rotate-translate vertexShader
+  this code should better be outside of the shader
+  shader code better be just: MVP * vect
+  */
   const char *vertexShaderSource = R"glsl(
     #version 460 core
     layout (location = 0) in vec3 aPos;
@@ -55,7 +97,7 @@ GLuint compileShaders() {
     out vec4 vertexColor;
     
     uniform float time;
-    float k = abs(sin(time)) / 2;
+    float k = abs(sin(time)) + 0.5;
     mat4 scale = mat4(
       vec4(k, 0, 0, 0),
       vec4(0, k, 0, 0),
@@ -107,29 +149,13 @@ GLuint compileShaders() {
         );
     })glsl";
 
-  GLint success_vertex;
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
 
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success_vertex);
-  if (!success_vertex) {
-    char infoLog[512];
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "Vertex shader error:\n" << infoLog << std::endl;
-  }
-
-  GLint success_fragment;
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
   glCompileShader(fragmentShader);
-
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success_fragment);
-  if (!success_fragment) {
-    char infoLog[512];
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "Vertex shader error:\n" << infoLog << std::endl;
-  }
 
   GLuint shaderProgram = glCreateProgram();
   glAttachShader(shaderProgram, vertexShader);
@@ -143,21 +169,15 @@ GLuint compileShaders() {
 }
 
 int main() {
-  std::cout << "THE COLORS:\nfirst: " << r1 << ' ' << g1 << ' ' << b1
-            << "\nsecond: " << r2 << ' ' << g2 << ' ' << b2 << '\n';
-
   glfwSetErrorCallback(glfw_error_callback);
   if (!glfwInit())
     return 1;
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
   GLFWwindow *window =
-      glfwCreateWindow(1200, 1200, "Rubik's cube", nullptr, nullptr);
-  if (!window)
+      glfwCreateWindow(1200, 1200, "Rubik's Cube Solver", nullptr, nullptr);
+  if (!window) {
     return 1;
+  }
 
   glfwMakeContextCurrent(window);
   glfwSwapInterval(1);
@@ -166,10 +186,11 @@ int main() {
     std::cerr << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
-  /*compiling shaders*/
+  // compiling shaders
   auto shaderProgram = compileShaders();
+  glUseProgram(shaderProgram);
 
-  /*init buffer*/
+  // init buffer
   GLuint VAO, VBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -179,14 +200,15 @@ int main() {
 
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_DYNAMIC_DRAW);
 
-  /*telling how to interpret the data inside shaders*/
-  // clang-format off
+  // telling how to interpret the data inside shaders
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
-  // clang-format on
 
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  // main loop
   bool isFirst = true;
   float time = 0.0f;
   int alpha = 0;
@@ -194,23 +216,28 @@ int main() {
   auto curr_time = prev_time;
   auto timedelta = std::chrono::seconds(1);
 
+  auto alphaID = glGetUniformLocation(shaderProgram, "alpha");
+  auto dxID = glGetUniformLocation(shaderProgram, "dx");
+  auto dyID = glGetUniformLocation(shaderProgram, "dy");
+  auto timeID = glGetUniformLocation(shaderProgram, "time");
+
   while (!glfwWindowShouldClose(window)) {
-    // clang-format off
-    /*set uniforms
-    btw: don't do glGetUniformLocation in the loop
-    */
-    glUseProgram(shaderProgram);
+    // resize handling
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
 
-    auto dx = distrib(gen);
-    glUniform1f(glGetUniformLocation(shaderProgram, "dx"), dx);
+    // uniforms for shaders
+    auto dx = (distrib(gen) - 0.5) * 2;
+    glUniform1f(dxID, dx);
 
-    auto dy = distrib(gen);
-    glUniform1f(glGetUniformLocation(shaderProgram, "dy"), dy);
+    auto dy = (distrib(gen) - 0.5) * 2;
+    glUniform1f(dyID, dy);
 
-    glUniform1f(glGetUniformLocation(shaderProgram, "time"), time);
-    glUniform1f(glGetUniformLocation(shaderProgram, "alpha"), M_PI * alpha / 180);
+    glUniform1f(timeID, time);
+    glUniform1f(alphaID, M_PI * alpha / 180);
 
-    /*rendering*/
+    // rendering
     auto curr_time = std::chrono::high_resolution_clock::now();
     if (isFirst || (curr_time - prev_time > timedelta)) {
       do_render(VAO, VBO);
@@ -218,12 +245,10 @@ int main() {
       prev_time = curr_time;
       isFirst = false;
     }
-    /*update uniforms*/
+    // update
     time += 0.01f;
     alpha = (alpha >= 360) ? 0 : alpha + 1;
-    /*pool*/
     glfwPollEvents();
-    // clang-format on
   }
 
   glfwDestroyWindow(window);
