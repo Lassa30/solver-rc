@@ -10,7 +10,7 @@ target_include_directories(imgui PUBLIC
     ${imgui_SOURCE_DIR}
 )
 
-# solver-rc: main
+add_library(utils INTERFACE utils.hpp)
 add_executable(solver-rc
     main.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
@@ -24,6 +24,7 @@ target_include_directories(solver-rc PRIVATE
 )
 
 target_link_libraries(solver-rc PRIVATE
+    utils
     imgui
     glad
     glfw
