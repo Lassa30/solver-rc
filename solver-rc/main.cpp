@@ -62,12 +62,12 @@ class RubiksCube {
 class CubeRenderer;
 class CubieRenderer;
 
-static float x = 0.5f;
+static float x = 0.2f;
 
 static float Vertices[3][7] = {
     {-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
 
-void do_render(GLuint VAO, GLuint VBO) {
+void render(GLuint VAO, GLuint VBO) {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -134,27 +134,64 @@ GLuint compileShaders() {
 }
 
 int main() {
-  const int xSideSize = 800;
-  const int ySideSize = 600;
-
-  glfwSetErrorCallback(glfw_error_callback);
+  // clang-format off
   if (!glfwInit()) {
     return 1;
   }
-  // clang-format off
+  int xSideSize = 800, ySideSize = 600;
   GLFWwindow *window = glfwCreateWindow(xSideSize, ySideSize, "Rubik's Cube Solver", nullptr, nullptr);
-  // clang-format on
+
   if (!window) {
     return 1;
   }
 
-  glfwMakeContextCurrent(window);
-  glfwSwapInterval(1); // vsync on
+  // callbacks
+  glfwSetErrorCallback(glfw_error_callback);
+  glfwSetFramebufferSizeCallback(
+    window, 
+    [](GLFWwindow *window, int width, int height) {
+        glViewport(0, 0, width, height);
+    }
+  );
+  glfwSetKeyCallback(
+    window, 
+    [](GLFWwindow *window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+      int width, height;
+      glfwGetWindowSize(window, &width, &height);
 
+      switch (key) {
+      case GLFW_KEY_UP:
+        height -= 25;
+        break;
+      case GLFW_KEY_DOWN:
+        height += 25;
+        break;
+      case GLFW_KEY_LEFT:
+        width -= 25;
+        break;
+      case GLFW_KEY_RIGHT:
+        width += 25;
+        break;
+      default:
+        return;
+      }
+
+      // Ensure minimum size
+      width = std::max(width, 100);
+      height = std::max(height, 100);
+      
+      glfwSetWindowSize(window, width, height);
+    }
+  }); // clang-format on
+
+  // window creation
+  glfwMakeContextCurrent(window);
   if (!gladLoadGL(glfwGetProcAddress)) {
     std::cerr << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
+  glfwSwapInterval(1); // vsync on
 
   // compiling shaders
   auto shaderProgram = compileShaders();
@@ -174,7 +211,6 @@ int main() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  // size related
   // clang-format off
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(3 * sizeof(float)));
   // clang-format on
@@ -182,12 +218,7 @@ int main() {
 
   // main loop
   while (!glfwWindowShouldClose(window)) {
-    // resize handling
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-
-    do_render(VAO, VBO);
+    render(VAO, VBO);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -222,6 +253,11 @@ I think this code is about resize handling, but what it really does?
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
+
+4)
+  the right order:
+  line n  : create context
+  line n+1:     setup glad
 
 [Experiments]
 1) Compare performance
