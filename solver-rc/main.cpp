@@ -67,13 +67,9 @@ static float x = 0.2f;
 static float Vertices[3][7] = {
     {-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
 
-void render(GLuint VAO, GLuint VBO) {
+void render() {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertices), Vertices);
-  glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
 }
 
@@ -218,7 +214,7 @@ int main() {
 
   // main loop
   while (!glfwWindowShouldClose(window)) {
-    render(VAO, VBO);
+    render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
