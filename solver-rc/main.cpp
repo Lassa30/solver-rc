@@ -15,9 +15,7 @@
 #include <iostream>
 #include <random>
 
-/*
-GL RELATED UTILS
-*/
+/*UTILS*/
 static void glfw_error_callback(int error, const char *description) {
   std::cout << (stderr, "GLFW Error %d: %s\n", error, description);
 }
@@ -27,50 +25,6 @@ static void printShaderRelatedError(int &infoLength, GLuint &shaderProgram) {
   glGetProgramInfoLog(shaderProgram, infoLength, nullptr,
                       &ProgramErrorMessage[0]);
   printf("%s\n", &ProgramErrorMessage[0]);
-}
-
-/*
-***************************************************
-*  cube                                           *
-***************************************************
-*/
-
-// clang-format off
-enum class ColorID { Color_1, Color_2, Color_3, Color_4, Color_5, Color_6, Color_None };
-// clang-format on
-
-// struct Colors {
-//   glm::vec4 FrontColor{1.0f, 1.0f, 1.0f, 1.0f};  // White
-//   glm::vec4 BackColor{1.0f, 1.0f, 0.0f, 1.0f};   // Yellow
-//   glm::vec4 RightColor{1.0f, 0.0f, 0.0f, 1.0f};  // Red
-//   glm::vec4 LeftColor{1.0f, 0.5f, 0.0f, 1.0f};   // Orange
-//   glm::vec4 TopColor{0.0f, 0.0f, 1.0f, 1.0f};    // Blue
-//   glm::vec4 BottomColor{0.0f, 1.0f, 0.0f, 1.0f}; // Green
-// };
-
-struct Cubie {
-  std::array<ColorID, 3> colors;
-  glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-
-  Cubie() = default;
-};
-
-class RubiksCube {
-  std::vector<Cubie> cube;
-};
-
-class CubeRenderer;
-class CubieRenderer;
-
-static float x = 0.2f;
-
-static float Vertices[3][7] = {
-    {-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
-
-void render() {
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
 }
 
 GLuint compileShaders() {
@@ -129,6 +83,18 @@ GLuint compileShaders() {
   return shaderProgram;
 }
 
+void render() {
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
+}
+
+/*Variables*/
+static float x = 0.2f;
+
+static float Vertices[3][7] = {
+    {-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
+
 int main() {
   // clang-format off
   if (!glfwInit()) {
@@ -179,7 +145,8 @@ int main() {
       
       glfwSetWindowSize(window, width, height);
     }
-  }); // clang-format on
+  });
+  // clang-format on
 
   // window creation
   glfwMakeContextCurrent(window);
@@ -187,7 +154,8 @@ int main() {
     std::cerr << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
-  glfwSwapInterval(1); // vsync on
+  // turn on vsync
+  glfwSwapInterval(1);
 
   // compiling shaders
   auto shaderProgram = compileShaders();
@@ -195,6 +163,7 @@ int main() {
 
   // init buffer
   GLuint VAO, VBO;
+
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -203,13 +172,11 @@ int main() {
 
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_DYNAMIC_DRAW);
 
-  // size related
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  // clang-format off
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(3 * sizeof(float)));
-  // clang-format on
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
   // main loop
@@ -251,9 +218,13 @@ I think this code is about resize handling, but what it really does?
   glViewport(0, 0, width, height);
 
 4)
-  the right order:
+  the right order for glad setup.
   line n  : create context
-  line n+1:     setup glad
+  line n+1: glad
+
+5)
+  How to use static variables / functions / methods / members?
+  What is the point in each of them?
 
 [Experiments]
 1) Compare performance
