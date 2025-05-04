@@ -6,9 +6,10 @@ include(FetchContent)
 # setting required options
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(GLFW_BUILD_EXAMPLES ON)
-set(OpenGL_GL_PREFERENCE "GLVND")
 set(FETCHCONTENT_QUIET OFF)
+set(OpenGL_GL_PREFERENCE "GLVND")
+
+option(SOLVER_BUILD_TESTS "Build tests" FALSE)
 
 # glfw
 FetchContent_Declare(
@@ -30,7 +31,6 @@ FetchContent_Declare(
     glad
     GIT_REPOSITORY https://github.com/Dav1dde/glad
     GIT_TAG v2.0.6
-    GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
 )
 if(NOT glad_POPULATED)
@@ -58,3 +58,17 @@ find_package(OpenGL REQUIRED)
 find_package(OpenCV REQUIRED)
 
 add_subdirectory(solver-rc)
+
+if(${SOLVER_BUILD_TESTS})
+    message(NOTICE "Building tests")
+    enable_testing()
+
+    FetchContent_Declare(
+        doctest
+        GIT_REPOSITORY https://github.com/doctest/doctest.git
+        GIT_TAG v2.4.12
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(doctest)
+    add_subdirectory(tests)
+endif()

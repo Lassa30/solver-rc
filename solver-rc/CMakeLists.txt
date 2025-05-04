@@ -11,6 +11,9 @@ target_include_directories(imgui PUBLIC
 )
 
 add_library(utils INTERFACE utils.hpp)
+add_library(cube INTERFACE cube.hpp)
+add_library(solver INTERFACE solver.hpp)
+
 add_executable(solver-rc
     main.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
@@ -24,11 +27,7 @@ target_include_directories(solver-rc PRIVATE
 )
 
 target_link_libraries(solver-rc PRIVATE
-    utils
-    imgui
-    glad
-    glfw
-    OpenGL::GL
-    glm
+    utils cube solver
+    imgui glad glfw OpenGL::GL glm
     ${OpenCV_LIBS}
 )
