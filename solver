@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cd build
+if [ ! $# -eq 1 ];then
+    echo "Provide only -b OR -r keys"
+    exit 1
+fi
+
+if [ $1 = "-g" ];
+then
+    cmake --fresh -DSOLVER_BUILD_TESTS=TRUE -DGLFW_BUILD_EXAMPLES=TRUE ..
+elif [ $1 = "-b" ];
+then
+    cmake --build .
+elif [ $1 = "-r" ];
+then
+    ./solver-rc/solver-rc;
+else
+    exit 1
+fi
+
+cd - > /dev/null
