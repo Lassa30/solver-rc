@@ -4,6 +4,11 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-TEST_CASE("RubiksCube") {}
+std::array<
 
-TEST_CASE("Solution") {}
+TEST_CASE("RubixCube construction") {
+    RubixCube cube;
+    
+}
+
+TEST_CASE("RubixCube ") {}

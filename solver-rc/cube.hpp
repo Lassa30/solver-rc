@@ -6,6 +6,11 @@
 #include <iostream>
 #include <memory>
 
+/*
+*********
+* Enums *
+*********
+*/
 enum class SideRotation {
   U, // Up
   D, // Down
@@ -26,7 +31,12 @@ enum class ColorID {
   NONE = -1
 };
 
-class RubiksCube {
+/*
+************************
+* RubixCube interface *
+************************
+*/
+class RubixCube {
 private:
   bool isSolved_ = false;
   ColorID frontSide_ = ColorID::NONE;
@@ -36,19 +46,19 @@ private:
 
 public:
   /*construct, copy, move, destruct*/
-  RubiksCube() = default;
-  RubiksCube(RubiksCube &&) noexcept = default;
-  RubiksCube &operator=(RubiksCube &&) noexcept = default;
-  RubiksCube(const RubiksCube &) = delete;
-  RubiksCube &operator=(const RubiksCube &) = delete;
-  ~RubiksCube() = default;
+  RubixCube() = default;
+  RubixCube(RubixCube &&) noexcept = default;
+  RubixCube &operator=(RubixCube &&) noexcept = default;
+  RubixCube(const RubixCube &) = delete;
+  RubixCube &operator=(const RubixCube &) = delete;
+  ~RubixCube() = default;
 
   /*checkers*/
   bool isValid();
   bool isSolved();
 
-  bool operator==(const RubiksCube &);
-  bool operator!=(const RubiksCube &);
+  bool operator==(const RubixCube &);
+  bool operator!=(const RubixCube &);
 
   /*setters*/
   void setState(std::array<std::array<ColorID, 9>, 6> state);
@@ -56,18 +66,20 @@ public:
   void setColor(ColorID color, int index);
 
   /*getters*/
-  const std::array<std::array<ColorID, 9>, 6> &getState();
+  const std::array<std::array<ColorID, 9>, 6> &getState() const;
   const std::unique_ptr<BaseSolver> &getSolver() noexcept;
-  const ColorID &getColor(int index);
+  const ColorID &getColor(int index) const;
 
   /*main methods*/
+  SolverStatus solve();
   void rotateSide(SideRotation rotation, int repeat);
   void rotateCube(CubeRotation rotation, int repeat);
 
-  SolverStatus solve();
-
 private:
-  bool isBalanced();
+  /*helper functions for cube validation*/
+  bool checkCornerOrientation();
+  bool checkEdgeOrientation();
+  bool checkPermutationParity();
   void genValidationReport(std::string &out);
 
   /*side rotations*/
@@ -79,4 +91,10 @@ private:
 
   void rotateFront(int repeat);
   void rotateDown(int repeat);
+
+  /*changing facing side*/
+  void faceLeft(int repeat);
+  void faceRight(int repeat);
+  void faceUp(int repeat);
+  void faceDown(int repeat);
 };
