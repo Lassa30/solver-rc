@@ -71,7 +71,7 @@ public:
   const ColorID &getColor(int index) const;
 
   /*main methods*/
-  SolverStatus solve();
+  void solve();
   void rotateSide(SideRotation rotation, int repeat);
   void rotateCube(CubeRotation rotation, int repeat);
 

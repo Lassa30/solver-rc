@@ -193,41 +193,10 @@ int main() {
 }
 
 /*
-[DEFINITIONS]
-  glsl           : language to write shaders
-  vertex shader  : sets the position and the color for the each vertex
-  fragment shader: takes input from the vertex shader and then do the stuff
-
-[NOTES]
-1)
-  inside fragment shader:
-  FragColor = vec4(...) is actually a cycle, check pseudo code:
-
-  for frag_idx in range(len(all_fragments)):
-    FragColor[frag_idx] = vec4(...)\
-
-2)
-why do we need a first line, we don't use it at all...
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileStatus);
-  glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLength);
-
-3)
-I think this code is about resize handling, but what it really does?
-  int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
-  glViewport(0, 0, width, height);
-
-4)
-  the right order for glad setup.
-  line n  : create context
-  line n+1: glad
-
-5)
-  How to use static variables / functions / methods / members?
-  What is the point in each of them?
-
 [Experiments]
-1) Compare performance
-- Compute ModelViewProjection matrices on CPU and the final compileStatus on GPU
-- Give everything to GPU and compute it
+1) Compare performance:
+- Compute ModelViewProjection matrices each frame on CPU and the final result on
+GPU <i.e. MVP * vec4(...)>
+- Give everything to GPU and compute it there < i.e. projection * view * model *
+vec4(...) >
 */
