@@ -3,6 +3,7 @@
 #include <solver.hpp>
 
 #include <array>
+#include <cstdint>
 #include <iostream>
 #include <memory>
 
@@ -33,7 +34,7 @@ enum class ColorID {
 
 /*
 ************************
-* RubixCube interface *
+*RubixCube             *
 ************************
 */
 class RubixCube {
