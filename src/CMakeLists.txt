@@ -10,11 +10,16 @@ target_include_directories(imgui PUBLIC
     ${imgui_SOURCE_DIR}
 )
 
-add_library(utils INTERFACE utils.hpp)
-add_library(cube cube.hpp cube.cpp)
-add_library(solver solver.hpp kociemba-solver.cpp thistlethwaite-solver.cpp)
-target_link_libraries(cube solver)
+# cube internal library
+file(GLOB SOLVER_CUBE_SOURCES "${CMAKE_SOURCE_DIR}/src/cube/*.[ch]pp")
+add_library(cube ${SOLVER_CUBE_SOURCES})
 
+# solvers internal library
+file(GLOB SOLVER_SOLVERS_SOURCES "${CMAKE_SOURCE_DIR}/src/solvers/*.[ch]pp")
+add_library(solvers ${SOLVER_SOLVERS_SOURCES})
+
+# solver-rc main
+add_library(utils INTERFACE utils.hpp)
 add_executable(solver-rc
     main.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp

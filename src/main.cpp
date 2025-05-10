@@ -1,4 +1,6 @@
-#include "utils.hpp"
+#include <cube/cube.hpp>
+#include <solvers/solvers.hpp>
+#include <utils.hpp>
 
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -33,12 +35,12 @@ GLuint compileShaders() {
 
   // reading vertex shader
   std::string vertexShaderSource =
-      readShader("../solver-rc/shaders/vertexShader.vert");
+      readShader("../src/shaders/vertexShader.vert");
   const char *vertexShaderSource_cstr = vertexShaderSource.c_str();
 
   // reading fragment shader
   std::string fragmentShaderSource =
-      readShader("../solver-rc/shaders/fragmentShader.frag");
+      readShader("../src/shaders/fragmentShader.frag");
   const char *fragmentShaderSource_cstr = fragmentShaderSource.c_str();
 
   // compiling vertex shader

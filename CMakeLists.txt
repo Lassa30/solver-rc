@@ -57,8 +57,8 @@ find_package(OpenGL REQUIRED)
 # installation required
 find_package(OpenCV REQUIRED)
 
-include_directories(${CMAKE_SOURCE_DIR}/solver-rc)
-add_subdirectory(solver-rc)
+include_directories(${CMAKE_SOURCE_DIR}/src)
+add_subdirectory(src)
 
 if(${SOLVER_BUILD_TESTS})
     message(NOTICE "Building tests")
