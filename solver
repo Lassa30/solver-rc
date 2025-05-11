@@ -19,11 +19,14 @@ then
     cmake --build .
 elif [ $1 = "-d" ];
 then
-    cmake -DCMAKE_BUILD_TYPE=Debug -B .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DSOLVER_BUILD_TESTS=TRUE ..
     cmake --build .
 elif [ $1 = "-r" ];
 then
     ./src/solver-rc;
+elif [ $1 = "-t" ];
+then
+    ctest -V ./tests
 else
     exit 2
 fi

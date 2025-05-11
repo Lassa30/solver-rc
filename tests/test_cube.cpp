@@ -7,8 +7,14 @@
 
 using namespace Cube;
 
-TEST_CASE("FrontendCube") { FrontendCube cube; }
+TEST_CASE("FrontendCube") {
+  FrontendCube cube;
+  CHECK(true);
+}
 
 TEST_CASE("EdgeCornerCube") {
-
+  EdgeCornerCube cube{};
+  cube.multiply(cube);
+  bool identity = cube == EdgeCornerCube();
+  CHECK(identity);
 }

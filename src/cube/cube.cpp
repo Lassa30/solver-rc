@@ -1,8 +1,11 @@
+#include "cube.hpp"
 #include <cube/cube.hpp>
+
+#include <algorithm>
+#include <iostream>
 
 namespace Cube {
 /*static data definitions*/
-bool EdgeCornerCube::isMoveCubesGenerated_ = false;
 const std::array<Corner, 8> EdgeCornerCube::cornersSolved{{{CornerID::URF, 0},
                                                            {CornerID::UFL, 0},
                                                            {CornerID::ULB, 0},
@@ -16,12 +19,17 @@ const std::array<Edge, 12> EdgeCornerCube::edgesSolved{
      EdgeID::DR, 0, EdgeID::DF, 0, EdgeID::DL, 0, EdgeID::DB, 0,
      EdgeID::FR, 0, EdgeID::FL, 0, EdgeID::BL, 0, EdgeID::BR, 0}};
 
+bool Edge::operator==(const Edge &rhs) {
+  return orientation == rhs.orientation && position == rhs.position;
+}
+bool Edge::operator!=(const Edge &rhs) { return !operator==(rhs); }
+
+bool Corner::operator==(const Corner &rhs) {
+  return orientation == rhs.orientation && position == rhs.position;
+}
+bool Corner::operator!=(const Corner &rhs) { return !operator==(rhs); }
+
 void EdgeCornerCube::generateMoveCubes() {
-  if (isMoveCubesGenerated_)
-    return;
-  std::array<EdgeCornerCube, 6> basicMovesCubes = {cubeMoveUp,    cubeMoveRight,
-                                                   cubeMoveFront, cubeMoveDown,
-                                                   cubeMoveLeft,  cubeMoveBack};
   for (int cid = 0; cid < static_cast<int>(ColorID::COUNT); cid++) {
     auto tempCube = EdgeCornerCube();
     for (int count = 0; count < 3; count++) {
@@ -29,8 +37,13 @@ void EdgeCornerCube::generateMoveCubes() {
       moveCubes_[3 * cid + count] = tempCube;
     }
   }
-  isMoveCubesGenerated_ = true;
 }
+
+std::array<EdgeCornerCube, 18> EdgeCornerCube::moveCubes_;
+bool EdgeCornerCube::isMoveCubesGenerated_ = [] {
+  EdgeCornerCube::generateMoveCubes();
+  return true;
+}();
 
 EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep,
                                const std::array<int, 12> &eo,
@@ -103,7 +116,7 @@ int EdgeCornerCube::calculateOrientation(int ori_lhs, int ori_rhs) {
 void EdgeCornerCube::multiplyCorners(const EdgeCornerCube &rhs) {
   std::array<Corner, 8> corners;
   int orientation = 0;
-  for (int cid = 0; cid < static_cast<int>(ColorID::COUNT); cid++) {
+  for (int cid = 0; cid < static_cast<int>(CornerID::COUNT); cid++) {
     auto cornerIdx = static_cast<int>(rhs.corners_[cid].position);
     int orientation_lhs = corners_[cornerIdx].orientation;
     int orientation_rhs = rhs.corners_[cornerIdx].orientation;
@@ -127,9 +140,15 @@ void EdgeCornerCube::multiplyEdges(const EdgeCornerCube &rhs) {
 }
 
 void EdgeCornerCube::multiply(const EdgeCornerCube &rhs) {
-  generateMoveCubes();
   multiplyCorners(rhs);
   multiplyEdges(rhs);
 }
+bool EdgeCornerCube::operator==(const EdgeCornerCube &rhs) {
+  return std::equal(corners_.begin(), corners_.end(), rhs.corners_.begin()) &&
+         std::equal(edges_.begin(), edges_.end(), rhs.edges_.begin());
+}
 
+bool EdgeCornerCube::operator!=(const EdgeCornerCube &rhs) {
+  return !operator==(rhs);
+}
 } // namespace Cube

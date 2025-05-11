@@ -42,11 +42,15 @@ public:
 struct Edge {
   EdgeID position;
   int orientation;
+  bool operator==(const Edge &);
+  bool operator!=(const Edge &);
 };
 
 struct Corner {
   CornerID position;
   int orientation;
+  bool operator==(const Corner &);
+  bool operator!=(const Corner &);
 };
 
 class EdgeCornerCube {
@@ -78,15 +82,16 @@ private:
   int edgeParity();
   int cornerParity();
   bool cubeIsValid();
-  void generateMoveCubes();
 
   int calculateOrientation(int, int);
 
 private:
-private:
-  static bool isMoveCubesGenerated_;
   static const std::array<Corner, 8> cornersSolved;
   static const std::array<Edge, 12> edgesSolved;
+
+  static bool isMoveCubesGenerated_;
+  static std::array<EdgeCornerCube, 18> moveCubes_;
+  static void generateMoveCubes();
 };
 
 /*basic cube moves*/
@@ -102,6 +107,9 @@ static const auto cubeMoveLeft = EdgeCornerCube(
     edgePositionL, edgeOrientationL, cornerPositionL, cornerOrientationL);
 static const auto cubeMoveBack = EdgeCornerCube(
     edgePositionB, edgeOrientationB, cornerPositionB, cornerOrientationB);
-static std::array<EdgeCornerCube, 18> moveCubes_;
+
+static const std::array<EdgeCornerCube, 6> basicMovesCubes = {
+    cubeMoveUp,   cubeMoveRight, cubeMoveFront,
+    cubeMoveDown, cubeMoveLeft,  cubeMoveBack};
 
 } // namespace Cube
