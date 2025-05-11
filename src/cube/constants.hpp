@@ -138,4 +138,4 @@ static constexpr std::array<std::array<ColorID, 2>, 12> edgeColorIDs = {
 };
 
 // clang-format on
-}; // namespace Cube
+};  // namespace Cube

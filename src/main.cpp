@@ -17,7 +17,6 @@
 #include <iostream>
 #include <random>
 
-
 /*UTILS*/
 static void glfw_error_callback(int error, const char *description) {
   std::cout << (stderr, "GLFW Error %d: %s\n", error, description);
@@ -25,8 +24,7 @@ static void glfw_error_callback(int error, const char *description) {
 
 static void printShaderRelatedError(int &infoLength, GLuint &shaderProgram) {
   std::vector<char> ProgramErrorMessage(infoLength + 1);
-  glGetProgramInfoLog(shaderProgram, infoLength, nullptr,
-                      &ProgramErrorMessage[0]);
+  glGetProgramInfoLog(shaderProgram, infoLength, nullptr, &ProgramErrorMessage[0]);
   printf("%s\n", &ProgramErrorMessage[0]);
 }
 
@@ -35,13 +33,11 @@ GLuint compileShaders() {
   int infoLength;
 
   // reading vertex shader
-  std::string vertexShaderSource =
-      readShader("../src/shaders/vertexShader.vert");
+  std::string vertexShaderSource = readShader("../src/shaders/vertexShader.vert");
   const char *vertexShaderSource_cstr = vertexShaderSource.c_str();
 
   // reading fragment shader
-  std::string fragmentShaderSource =
-      readShader("../src/shaders/fragmentShader.frag");
+  std::string fragmentShaderSource = readShader("../src/shaders/fragmentShader.frag");
   const char *fragmentShaderSource_cstr = fragmentShaderSource.c_str();
 
   // compiling vertex shader
@@ -95,8 +91,7 @@ void render() {
 /*Variables*/
 static float x = 0.2f;
 
-static float Vertices[3][7] = {
-    {-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
+static float Vertices[3][7] = {{-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
 
 int main() {
   // clang-format off
@@ -178,8 +173,7 @@ int main() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                        (void *)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
   // main loop

@@ -3,6 +3,7 @@
 #include <cube/constants.hpp>
 
 #include <array>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -56,11 +57,11 @@ struct Corner {
 class EdgeCornerCube {
 public:
   EdgeCornerCube() = default;
-  EdgeCornerCube(const std::array<Edge, 12> &edges,
-                 const std::array<Corner, 8> &corners);
-  EdgeCornerCube(const std::array<EdgeID, 12> &, const std::array<int, 12> &,
-                 const std::array<CornerID, 8> &, const std::array<int, 8> &);
+  EdgeCornerCube(const std::array<Edge, 12> &edges, const std::array<Corner, 8> &corners);
+  EdgeCornerCube(const std::array<EdgeID, 12> &, const std::array<int, 12> &, const std::array<CornerID, 8> &,
+                 const std::array<int, 8> &);
 
+  void applyMove(SideMovement move);
   void multiply(const EdgeCornerCube &rhs);
 
   bool operator==(const EdgeCornerCube &);
@@ -68,6 +69,10 @@ public:
 
   EdgeCornerCube inverseCube();
   std::vector<EdgeCornerCube> symmetries();
+
+  std::string toString() const;
+
+  static inline const EdgeCornerCube &moveCubes(SideMovement move) { return moveCubes_[(int)move]; }
 
   FrontendCube toFrontendCube() const;
 
@@ -95,21 +100,14 @@ private:
 };
 
 /*basic cube moves*/
-static const auto cubeMoveUp = EdgeCornerCube(
-    edgePositionU, edgeOrientationU, cornerPositionU, cornerOrientationU);
-static const auto cubeMoveRight = EdgeCornerCube(
-    edgePositionR, edgeOrientationR, cornerPositionR, cornerOrientationR);
-static const auto cubeMoveFront = EdgeCornerCube(
-    edgePositionF, edgeOrientationF, cornerPositionF, cornerOrientationF);
-static const auto cubeMoveDown = EdgeCornerCube(
-    edgePositionD, edgeOrientationD, cornerPositionD, cornerOrientationD);
-static const auto cubeMoveLeft = EdgeCornerCube(
-    edgePositionL, edgeOrientationL, cornerPositionL, cornerOrientationL);
-static const auto cubeMoveBack = EdgeCornerCube(
-    edgePositionB, edgeOrientationB, cornerPositionB, cornerOrientationB);
+static const auto cubeMoveUp = EdgeCornerCube(edgePositionU, edgeOrientationU, cornerPositionU, cornerOrientationU);
+static const auto cubeMoveRight = EdgeCornerCube(edgePositionR, edgeOrientationR, cornerPositionR, cornerOrientationR);
+static const auto cubeMoveFront = EdgeCornerCube(edgePositionF, edgeOrientationF, cornerPositionF, cornerOrientationF);
+static const auto cubeMoveDown = EdgeCornerCube(edgePositionD, edgeOrientationD, cornerPositionD, cornerOrientationD);
+static const auto cubeMoveLeft = EdgeCornerCube(edgePositionL, edgeOrientationL, cornerPositionL, cornerOrientationL);
+static const auto cubeMoveBack = EdgeCornerCube(edgePositionB, edgeOrientationB, cornerPositionB, cornerOrientationB);
 
-static const std::array<EdgeCornerCube, 6> basicMovesCubes = {
-    cubeMoveUp,   cubeMoveRight, cubeMoveFront,
-    cubeMoveDown, cubeMoveLeft,  cubeMoveBack};
+static const std::array<EdgeCornerCube, 6> basicMovesCubes = {cubeMoveUp,   cubeMoveRight, cubeMoveFront,
+                                                              cubeMoveDown, cubeMoveLeft,  cubeMoveBack};
 
-} // namespace Cube
+}  // namespace Cube

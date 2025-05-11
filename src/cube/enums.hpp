@@ -8,7 +8,7 @@ enum class SideMovement {
     F, F2, F3,
     D, D2, D3,
     L, L2, L3,
-    B, B2, B3
+    B, B2, B3, COUNT
 };
 
 enum class CubePosition {
@@ -41,7 +41,7 @@ enum class EdgeID { UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR, COUNT };
 
 enum class CornerID { URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB, COUNT };
 
-enum class ColorID : char { U = 'U', R = 'R', F = 'F', D = 'D', L = 'L', B = 'B', COUNT = 6 };
+enum class ColorID { U, R, F, D, L, B, COUNT };
 
 // clang-format on
-}; // namespace Cube
+};  // namespace Cube
