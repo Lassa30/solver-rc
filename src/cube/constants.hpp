@@ -9,7 +9,7 @@
 namespace Cube {
 // clang-format off
 
-/*cube moves defined as positions and orientations*/
+/*cube moves are defined as positions and orientations*/
 
 // Up move
 static constexpr std::array<CornerID, 8> cornerPositionU{
