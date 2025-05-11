@@ -19,9 +19,9 @@ const std::array<Edge, 12> EdgeCornerCube::edgesSolved{
 void EdgeCornerCube::generateMoveCubes() {
   if (isMoveCubesGenerated_)
     return;
-  static std::array<EdgeCornerCube, 6> basicMovesCubes = {
-      cubeMoveUp,   cubeMoveRight, cubeMoveFront,
-      cubeMoveDown, cubeMoveLeft,  cubeMoveBack};
+  std::array<EdgeCornerCube, 6> basicMovesCubes = {cubeMoveUp,    cubeMoveRight,
+                                                   cubeMoveFront, cubeMoveDown,
+                                                   cubeMoveLeft,  cubeMoveBack};
   for (int cid = 0; cid < static_cast<int>(ColorID::COUNT); cid++) {
     auto tempCube = EdgeCornerCube();
     for (int count = 0; count < 3; count++) {
@@ -36,7 +36,6 @@ EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep,
                                const std::array<int, 12> &eo,
                                const std::array<CornerID, 8> &cp,
                                const std::array<int, 8> &co) {
-  generateMoveCubes();
   auto edges = edges_;
   auto corners = corners_;
   for (int edgeIdx = 0; edgeIdx < static_cast<int>(EdgeID::COUNT); edgeIdx++) {
@@ -56,9 +55,7 @@ EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep,
 
 EdgeCornerCube::EdgeCornerCube(const std::array<Edge, 12> &edges,
                                const std::array<Corner, 8> &corners)
-    : edges_{edges}, corners_{corners} {
-  generateMoveCubes();
-}
+    : edges_{edges}, corners_{corners} {}
 
 int EdgeCornerCube::cornerParity() {
   int parity = 0;

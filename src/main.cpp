@@ -17,6 +17,7 @@
 #include <iostream>
 #include <random>
 
+
 /*UTILS*/
 static void glfw_error_callback(int error, const char *description) {
   std::cout << (stderr, "GLFW Error %d: %s\n", error, description);
