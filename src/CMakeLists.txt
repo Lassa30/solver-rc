@@ -18,6 +18,8 @@ add_library(cube ${SOLVER_CUBE_SOURCES})
 file(GLOB SOLVER_SOLVERS_SOURCES "${CMAKE_SOURCE_DIR}/src/solvers/*.[ch]pp")
 add_library(solvers ${SOLVER_SOLVERS_SOURCES})
 
+target_link_libraries(cube solvers)
+
 # solver-rc main
 add_library(utils INTERFACE utils.hpp)
 add_executable(solver-rc

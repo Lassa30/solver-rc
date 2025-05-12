@@ -67,35 +67,36 @@ public:
   bool operator==(const EdgeCornerCube &);
   bool operator!=(const EdgeCornerCube &);
 
-  EdgeCornerCube inverseCube();
-  std::vector<EdgeCornerCube> symmetries();
+  /*implement later if required*/
+  // bool isValidCube() const;
 
   std::string toString() const;
 
-  static inline const EdgeCornerCube &moveCubes(SideMovement move) { return moveCubes_[(int)move]; }
-
-  FrontendCube toFrontendCube() const;
+  static inline const EdgeCornerCube &getMoveCube(SideMovement move) { return moveCubes_[(int)move]; }
 
 private:
   /*initial state is the solved cube*/
   std::array<Corner, 8> corners_ = cornersSolved;
   std::array<Edge, 12> edges_ = edgesSolved;
 
+  /*functions to implement multiplication*/
+  int calculateOrientation(int, int);
   void multiplyCorners(const EdgeCornerCube &rhs);
   void multiplyEdges(const EdgeCornerCube &rhs);
 
-  int edgeParity();
-  int cornerParity();
-  bool cubeIsValid();
+  /*helpers to implement EdgeCornerCube::isValid*/
 
-  int calculateOrientation(int, int);
+  int edgeParity() const;
+  int cornerParity() const;
 
-private:
+  /*data and functions shared across all EdgeCornerCubes*/
   static const std::array<Corner, 8> cornersSolved;
   static const std::array<Edge, 12> edgesSolved;
 
   static bool isMoveCubesGenerated_;
   static std::array<EdgeCornerCube, 18> moveCubes_;
+
+  /*moveCubes_ initializer*/
   static void generateMoveCubes();
 };
 

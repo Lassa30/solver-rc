@@ -26,6 +26,8 @@ then
     ./src/solver-rc;
 elif [ $1 = "-t" ];
 then
+    cmake -DSOLVER_BUILD_TESTS=TRUE ..
+    cmake --build .
     ctest --output-on-failure tests
 else
     exit 2

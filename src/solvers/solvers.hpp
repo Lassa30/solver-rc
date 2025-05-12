@@ -1,26 +1,27 @@
 #pragma once
 
+#include <cube/cube.hpp>
+
+#include <bitset>
 #include <string>
 
-class BaseSolver {
-public:
-  virtual std::string solve() = 0;
-};
-
 /* Kociemba’s algorithm: two-phase algorithm */
-class KociembaSolver : public BaseSolver {
+class KociembaSolver {
 public:
-  std::string solve() override;
-};
+  explicit KociembaSolver(const Cube::EdgeCornerCube&);
 
-/* Custom algorithm: view README.md */
-class CustomSolver : public BaseSolver {
-public:
-  std::string solve() override;
-};
+private:
+  class CoordinateCube;
+  Cube::EdgeCornerCube edgeCornerCube_;
 
-/* Thistlethwaite’s algorithm: 52 moves algorithm */
-class ThistlethwaiteSolver : public BaseSolver {
-public:
-  std::string solve() override;
+  /*symmetry related things for speeding up the process*/
+  Cube::EdgeCornerCube inverseEdgeCornerCube() const;
+  std::bitset<96> symmetriesEdgeCornerCube() const;
+
+  /*symmetry checkers*/
+  bool hasRotationalSymmetry(const std::bitset<96>&) const;
+  bool hasAntiSymmetry(const std::bitset<96>&) const;
+
+  /*main solve function: idk the interface yet*/
+  std::string solve();
 };
