@@ -38,18 +38,18 @@ bool EdgeCornerCube::isMoveCubesGenerated_ = [] {
 }();
 
 /*EdgeCornerCube - operators*/
-bool Edge::operator==(const Edge &rhs) { return orientation == rhs.orientation && position == rhs.position; }
-bool Edge::operator!=(const Edge &rhs) { return !operator==(rhs); }
+bool Edge::operator==(const Edge &rhs) const { return orientation == rhs.orientation && position == rhs.position; }
+bool Edge::operator!=(const Edge &rhs) const { return !operator==(rhs); }
 
-bool Corner::operator==(const Corner &rhs) { return orientation == rhs.orientation && position == rhs.position; }
-bool Corner::operator!=(const Corner &rhs) { return !operator==(rhs); }
+bool Corner::operator==(const Corner &rhs) const { return orientation == rhs.orientation && position == rhs.position; }
+bool Corner::operator!=(const Corner &rhs) const { return !operator==(rhs); }
 
-bool EdgeCornerCube::operator==(const EdgeCornerCube &rhs) {
+bool EdgeCornerCube::operator==(const EdgeCornerCube &rhs) const {
   return std::equal(corners_.begin(), corners_.end(), rhs.corners_.begin()) &&
          std::equal(edges_.begin(), edges_.end(), rhs.edges_.begin());
 }
 
-bool EdgeCornerCube::operator!=(const EdgeCornerCube &rhs) { return !operator==(rhs); }
+bool EdgeCornerCube::operator!=(const EdgeCornerCube &rhs) const { return !operator==(rhs); }
 
 /*EdgeCornerCube - constructors*/
 EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep, const std::array<int, 12> &eo,

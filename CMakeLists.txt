@@ -9,8 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(FETCHCONTENT_QUIET OFF)
 set(OpenGL_GL_PREFERENCE "GLVND")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+#todo: remove later
+set(CMAKE_BUILD_TYPE Debug)
 
-option(SOLVER_BUILD_TESTS "Build tests" FALSE)
+option(SOLVER_BUILD_TESTS "Build tests" TRUE)
 
 # glfw
 FetchContent_Declare(

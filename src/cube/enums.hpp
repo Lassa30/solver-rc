@@ -43,5 +43,15 @@ enum class CornerID { URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB, COUNT };
 
 enum class ColorID { U, R, F, D, L, B, COUNT };
 
+
+/* Basic symmetry operations */
+enum class BasicSymmetry {
+    ROT_URF3,
+    ROT_F2,
+    ROT_U4,
+    MIRR_LR2,
+    COUNT
+};
+
 // clang-format on
 };  // namespace Cube

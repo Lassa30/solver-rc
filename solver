@@ -11,23 +11,18 @@ if [ $# -eq 0 ];then
     exit 1
 fi
 
-if [ $1 = "-g" ];
+
+if [ $1 = "-b" ];
 then
-    cmake --fresh -DSOLVER_BUILD_TESTS=TRUE -DGLFW_BUILD_EXAMPLES=TRUE ..
-elif [ $1 = "-b" ];
-then
-    cmake --build .
-elif [ $1 = "-d" ];
-then
-    cmake -DCMAKE_BUILD_TYPE=Debug -DSOLVER_BUILD_TESTS=TRUE ..
+    cmake --fresh -DGLFW_BUILD_EXAMPLES=TRUE ..
     cmake --build .
 elif [ $1 = "-r" ];
 then
     ./src/solver-rc;
 elif [ $1 = "-t" ];
 then
-    cmake -DSOLVER_BUILD_TESTS=TRUE ..
-    cmake --build .
+    cmake --fresh .. &&
+    cmake --build . &&
     ctest --output-on-failure tests
 else
     exit 2

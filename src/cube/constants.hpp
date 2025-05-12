@@ -9,6 +9,9 @@
 namespace Cube {
 // clang-format off
 
+/*integer constants*/
+static constexpr int NUMBER_OF_SYMMETRIES = 48;
+
 /*cube moves are defined as positions and orientations*/
 
 // Up move

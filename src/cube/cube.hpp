@@ -43,15 +43,15 @@ public:
 struct Edge {
   EdgeID position;
   int orientation;
-  bool operator==(const Edge &);
-  bool operator!=(const Edge &);
+  bool operator==(const Edge &) const;
+  bool operator!=(const Edge &) const;
 };
 
 struct Corner {
   CornerID position;
   int orientation;
-  bool operator==(const Corner &);
-  bool operator!=(const Corner &);
+  bool operator==(const Corner &) const;
+  bool operator!=(const Corner &) const;
 };
 
 class EdgeCornerCube {
@@ -64,8 +64,11 @@ public:
   void applyMove(SideMovement move);
   void multiply(const EdgeCornerCube &rhs);
 
-  bool operator==(const EdgeCornerCube &);
-  bool operator!=(const EdgeCornerCube &);
+  bool operator==(const EdgeCornerCube &) const;
+  bool operator!=(const EdgeCornerCube &) const;
+
+  inline const Corner& getCorner(int cornerIdx) const { return corners_.at(cornerIdx); }
+  inline const Edge& getEdge(int edgeIdx) const { return edges_.at(edgeIdx); }
 
   /*implement later if required*/
   // bool isValidCube() const;
