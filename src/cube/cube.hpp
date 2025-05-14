@@ -61,14 +61,26 @@ public:
   EdgeCornerCube(const std::array<EdgeID, 12> &, const std::array<int, 12> &, const std::array<CornerID, 8> &,
                  const std::array<int, 8> &);
 
-  void applyMove(SideMovement move);
+  /*movement related*/
+  void multiplyCorners(const EdgeCornerCube &rhs);
+  void multiplyEdges(const EdgeCornerCube &rhs);
   void multiply(const EdgeCornerCube &rhs);
+  void applyMove(SideMovement move);
 
   bool operator==(const EdgeCornerCube &) const;
   bool operator!=(const EdgeCornerCube &) const;
 
-  inline const Corner& getCorner(int cornerIdx) const { return corners_.at(cornerIdx); }
-  inline const Edge& getEdge(int edgeIdx) const { return edges_.at(edgeIdx); }
+  inline const Corner &getCorner(int cornerIdx) const & { return corners_.at(cornerIdx); }
+  inline const Edge &getEdge(int edgeIdx) const & { return edges_.at(edgeIdx); }
+
+  inline Corner getCorner(int cornerIdx) const && { return std::move(corners_.at(cornerIdx)); }
+  inline Edge getEdge(int edgeIdx) const && { return std::move(edges_.at(edgeIdx)); }
+
+  inline void setCorner(int cornerIdx, Corner corner) { corners_[cornerIdx] = corner; }
+  inline void setEdge(int edgeIdx, Edge edge) { edges_[edgeIdx] = edge; }
+  
+  inline void setCorner(CornerID cornerID, Corner corner) { setCorner((int)cornerID, corner); }
+  inline void setEdge(EdgeID edgeID, Edge edge) { setEdge((int)edgeID, edge); }
 
   /*implement later if required*/
   // bool isValidCube() const;
@@ -84,8 +96,6 @@ private:
 
   /*functions to implement multiplication*/
   int calculateOrientation(int, int);
-  void multiplyCorners(const EdgeCornerCube &rhs);
-  void multiplyEdges(const EdgeCornerCube &rhs);
 
   /*helpers to implement EdgeCornerCube::isValid*/
 

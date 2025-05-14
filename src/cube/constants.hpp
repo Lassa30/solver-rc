@@ -11,6 +11,7 @@ namespace Cube {
 
 /*integer constants*/
 static constexpr int NUMBER_OF_SYMMETRIES = 48;
+static constexpr int PERM_4 = 24;
 
 /*cube moves are defined as positions and orientations*/
 
