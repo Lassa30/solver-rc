@@ -6,3 +6,6 @@ Install OpenCV
 sudo apt update
 sudo apt install libopencv-dev
 ```
+
+
+List of precompute tables to do:

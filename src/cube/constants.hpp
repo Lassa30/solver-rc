@@ -10,6 +10,7 @@ namespace Cube {
 // clang-format off
 
 /*integer constants*/
+static constexpr int NUMBER_OF_MOVES = 18;
 static constexpr int NUMBER_OF_SYMMETRIES = 48;
 static constexpr int PERM_4 = 24;
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 project(solver-rc LANGUAGES CXX C)
 include(FetchContent)
@@ -8,11 +8,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(FETCHCONTENT_QUIET OFF)
 set(OpenGL_GL_PREFERENCE "GLVND")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-#todo: remove later
-set(CMAKE_BUILD_TYPE Debug)
+set(PRECOMPUTED_DIR "${CMAKE_SOURCE_DIR}/precomputed")
 
-option(SOLVER_BUILD_TESTS "Build tests" TRUE)
+# TODO: remove later
+option(SOLVER_DEBUG "Build with debug information" OFF)
+if(${SOLVER_DEBUG})
+    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+endif()
+
+option(SOLVER_BUILD_TESTS "Build tests" ON)
 
 # glfw
 FetchContent_Declare(
@@ -60,9 +65,11 @@ find_package(OpenGL REQUIRED)
 # installation required
 find_package(OpenCV REQUIRED)
 
+# source folder
 include_directories(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(src)
 
+# adding tests
 if(${SOLVER_BUILD_TESTS})
     message(NOTICE "Building tests")
     enable_testing()

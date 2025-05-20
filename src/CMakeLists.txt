@@ -17,6 +17,7 @@ add_library(cube ${SOLVER_CUBE_SOURCES})
 # solvers internal library
 file(GLOB SOLVER_SOLVERS_SOURCES "${CMAKE_SOURCE_DIR}/src/solvers/*.[ch]pp")
 add_library(solvers ${SOLVER_SOLVERS_SOURCES})
+target_compile_definitions(solvers PRIVATE "PRECOMPUTED_FILES_INSTALL_DIR=\"${PRECOMPUTED_DIR}\"")
 
 target_link_libraries(cube solvers)
 

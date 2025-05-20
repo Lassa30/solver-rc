@@ -4,8 +4,9 @@
 
 #include <array>
 #include <bitset>
-#include <memory>  // Required for std::unique_ptr if used, but we'll use KociembaSolver*
+#include <cstdint>  // Required for uint32_t
 #include <string>
+#include <vector>
 
 using namespace Cube;
 
@@ -15,6 +16,17 @@ namespace Kociemba {
 enum class BasicSymmetry { ROT_URF3, ROT_F2, ROT_U4, MIRR_LR2, COUNT };
 // Constant for number of symmetries (assuming it's defined)
 static constexpr int NUMBER_OF_SYMMETRIES = 48;
+static constexpr int N_SYM_D4h = 16;               // D4h symmetry subgroup size
+static constexpr int TWIST_MAX = 2187;             // 3^7 corner orientations
+static constexpr int FLIP_MAX = 2048;              // 2^11 edge orientations
+static constexpr int SLICE_MAX = 495;              // C(12,4)
+static constexpr int SLICE_SORTED_MAX = 11880;     // N_SLICE_SORTED from Python (12!/8!)
+static constexpr int FLIPSLICE_CLASS_MAX = 64430;  // Number of equivalence classes for flip+slice
+static constexpr int CORNERS_MAX = 40320;          // 8! corner permutations
+static constexpr int CORNERS_CLASS_MAX = 2768;     // Number of equivalence classes for corner permutations
+static constexpr int UD_EDGES_MAX = 40320;         // N_UD_EDGES from Python (8!)
+static constexpr int UD_EDGES_CONJ_MAX = UD_EDGES_MAX * N_SYM_D4h;  // For udEdgesConjTable_
+static constexpr unsigned short INVALID_SHORT = 0xFFFF;
 
 /* Kociemba's algorithm: two-phase algorithm */
 class KociembaSolver {
@@ -63,6 +75,8 @@ public:
     void setCorners(int idx);
     void setUDEdges(int idx);
 
+    int getCornersUDEdgesDepth3(int ix);
+
     struct phaseOne {
       phaseOne() : twist{SOLVED}, flip{SOLVED}, slice_sorted{SOLVED} {}
       phaseOne(int c1, int c2, int c3) : twist{c1}, flip{c2}, slice_sorted{c3} {}
@@ -102,21 +116,94 @@ private:
   EdgeCornerCube ecCube_;
 
   /*members for cube symmetries generation*/
-  static std::array<EdgeCornerCube, static_cast<int>(BasicSymmetry::COUNT)> basicSymCubes_;
-  static std::array<EdgeCornerCube, NUMBER_OF_SYMMETRIES> symCubes_;
-  static std::array<int, NUMBER_OF_SYMMETRIES> inverseSymIdx_;
-
   static bool isBasicSymCubesGenerated_;
-  static bool isSymCubesGenerated_;
-  static bool isInverseSymIdxGenerated_;
-
+  static std::array<EdgeCornerCube, static_cast<int>(BasicSymmetry::COUNT)> basicSymCubes_;
   static void generateBasicSymCubes();
+
+  static bool isSymCubesGenerated_;
+  static std::array<EdgeCornerCube, NUMBER_OF_SYMMETRIES> symCubes_;
   static void generateSymCubes();
+
+  static bool isInverseSymIdxGenerated_;
+  static std::array<int, NUMBER_OF_SYMMETRIES> inverseSymIdx_;
   static void generateInverseSymIdx();
 
-  /*static members for pruning tables generation*/
+  static bool isConjMovesGenerated_;
+  static std::array<int, NUMBER_OF_MOVES * NUMBER_OF_SYMMETRIES> conjMoves_;
+  static void generateConjMove();
 
-  /*static members for move tables generation*/
+  /*static members for symmetry conjugation tables*/
+  static bool isTwistConjTableGenerated_;
+  static std::vector<unsigned short> twistConjTable_;
+  static void generateTwistConjTable();
+
+  /*static members for flip-slice symmetry tables*/
+  static bool isFlipSliceTablesGenerated_;
+  static std::vector<unsigned short> flipSliceClassIdx_;  // idx -> classidx
+  static std::vector<unsigned char> flipSliceSym_;        // idx -> symmetry
+  static std::vector<uint32_t> flipSliceRep_;             // classidx -> idx of representant
+  static void generateFlipSliceTables();
+
+  /*static members for corner permutation symmetry tables*/
+  static bool isCornerTablesGenerated_;
+  static std::vector<unsigned short> cornerClassIdx_;  // idx -> classidx
+  static std::vector<unsigned char> cornerSym_;        // idx -> symmetry
+  static std::vector<unsigned short> cornerRep_;       // classidx -> idx of representant
+  static void generateCornerTables();
+
+  /*static members for move tables*/
+  static bool isTwistMoveTableGenerated_;
+  static std::vector<unsigned short> twistMoveTable_;
+  static void generateTwistMoveTable();
+
+  static bool isFlipMoveTableGenerated_;
+  static std::vector<unsigned short> flipMoveTable_;
+  static void generateFlipMoveTable();
+
+  static bool isSliceSortedMoveTableGenerated_;
+  static std::vector<unsigned short> sliceSortedMoveTable_;
+  static void generateSliceSortedMoveTable();
+
+  static bool isUEdgesMoveTableGenerated_;
+  static std::vector<unsigned short> uEdgesMoveTable_;
+  static void generateUEdgesMoveTable();
+
+  static bool isDEdgesMoveTableGenerated_;
+  static std::vector<unsigned short> dEdgesMoveTable_;
+  static void generateDEdgesMoveTable();
+
+  static bool isUDEdgesMoveTableGenerated_;
+  static std::vector<unsigned short> udEdgesMoveTable_;
+  static void generateUDEdgesMoveTable();
+
+  static bool isCornersMoveTableGenerated_;
+  static std::vector<unsigned short> cornersMoveTable_;
+  static void generateCornersMoveTable();
+
+  /*static members for pruning tables (depth % 3, packed)*/
+  static bool isFlipSliceTwistDepth3TableGenerated_;  // To be added if there's a generation function
+  static std::vector<uint32_t> flipSliceTwistDepth3_;
+  static void generateFlipSliceTwistDepth3Table();  // Example if needed
+
+  static bool isCornersUDEdgesDepth3TableGenerated_;
+  static std::vector<uint32_t> cornersUDEdgesDepth3_;
+  static void generateCornersUDEdgesDepth3Table();
+
+  // Declared based on Python's None initialization, actual type/usage might be defined later
+  static std::vector<unsigned char> cornSliceDepth_;
+  static std::vector<unsigned char> edgeSliceDepth_;
+
+  /*static members for UD Edges Conjugation Table*/
+  static bool isUDEdgesConjTableGenerated_;
+  static std::vector<unsigned short> udEdgesConjTable_;
+  static void generateUDEdgesConjTable();
+
+  static unsigned char getFlipSliceTwistDepth3(int ix);
+  static void setFlipSliceTwistDepth3(int ix, unsigned char value);
+  static unsigned char getCornersUDEdgesDepth3(int ix);
+  static void setCornersUDEdgesDepth3(int ix, unsigned char value);
+
+  static std::string getPrecomputedPath(const std::string& filename);
 };
 
 }  // namespace Kociemba
