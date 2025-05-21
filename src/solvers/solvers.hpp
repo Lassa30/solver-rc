@@ -30,6 +30,8 @@ static constexpr unsigned short INVALID_SHORT = 0xFFFF;
 
 /* Kociemba's algorithm: two-phase algorithm */
 class KociembaSolver {
+  EdgeCornerCube ecCube_;
+
 public:
   explicit KociembaSolver(const EdgeCornerCube&);
 
@@ -131,11 +133,10 @@ public:
     template <typename Container>
     static void rotate_left(Container& arr, int left, int right);
   };
+
   CoordinateCube coordCube;
 
 private:
-  EdgeCornerCube ecCube_;
-
   /*members for cube symmetries generation*/
   static bool isBasicSymCubesGenerated_;
   static std::array<EdgeCornerCube, static_cast<int>(BasicSymmetry::COUNT)> basicSymCubes_;

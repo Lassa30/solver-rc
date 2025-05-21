@@ -11,14 +11,9 @@ namespace Kociemba {
 KociembaSolver::CoordinateCube::CoordinateCube(KociembaSolver* solver) : solver_{solver} {
   coordsPhaseOne = phaseOne(getTwist(), getFlip(), getSliceSorted());
   coordsPhaseTwo = phaseTwo(getUEdges(), getDEdges(), getCorners(), getUDEdges());
-  
 
   // Initialize symmetry-reduced coordinates for phase 1
   int slice_sorted = getSliceSorted();
-
-  std::cout << "LEN FLIPSLICE_CLASSIDX " << flipSliceClassIdx_.size() << '\n'
-            << " SLICE_SORTED " << coordsPhaseOne.slice_sorted << '\n'
-            << " FLIP " << coordsPhaseOne.flip << '\n';
   int flip = getFlip();
   int slice_part = slice_sorted / PERM_4;
   int flipslice_idx = FLIP_MAX * slice_part + flip;
@@ -27,10 +22,10 @@ KociembaSolver::CoordinateCube::CoordinateCube(KociembaSolver* solver) : solver_
   flipslice_rep = flipSliceRep_[flipslice_classidx];
 
   // // Initialize symmetry-reduced coordinates for phase 2
-  // int corners = getCorners();
-  // corner_classidx = cornerClassIdx_[corners];
-  // corner_sym = cornerSym_[corners];
-  // corner_rep = cornerRep_[corner_classidx];
+  int corners = getCorners();
+  corner_classidx = cornerClassIdx_[corners];
+  corner_sym = cornerSym_[corners];
+  corner_rep = cornerRep_[corner_classidx];
 }
 
 /*Coordinate mappings between EdgeCornerCube and CoordinateCube*/
@@ -68,7 +63,6 @@ int KociembaSolver::CoordinateCube::getFlip() const {
   int flip = 0;
   for (int i = static_cast<int>(EdgeID::UR); i < static_cast<int>(EdgeID::BR); i++) {
     flip = 2 * flip + solver_->ecCube_.getEdge(i).orientation;
-    std::cout << "EDGE ORIENTATION " << solver_->ecCube_.getEdge(i).orientation << '\n';
   }
   return flip;
 }

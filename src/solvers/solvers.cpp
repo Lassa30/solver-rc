@@ -93,9 +93,7 @@ bool KociembaSolver::hasAntiSymmetry(const std::bitset<96>& symmetries) const {
 }
 
 /*KociembaSolver - misc*/
-KociembaSolver::KociembaSolver(const Cube::EdgeCornerCube& cube) : ecube), coores) {
-  std::cout << ecCube_.toString() << '\n';
-}
+KociembaSolver::KociembaSolver(const Cube::EdgeCornerCube& cube) : ecCube_(cube), coordCube(this) {}
 
 std::string KociembaSolver::toString() const { return ecCube_.toString(); }
 
