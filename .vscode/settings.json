@@ -1,0 +1,17 @@
+{
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "clang-format.executable": "/usr/bin/clang-format",
+    "clang-format.language.cpp.style": "{'Language': 'Cpp', 'BasedOnStyle': 'google', 'ColumnLimit': 120, 'PointerAlignment': 'Left', 'ReferenceAlignment': 'Left', 'IndentWidth': 2, 'BreakConstructorInitializers': 'BeforeComma', 'AccessModifierOffset': -2, 'SortIncludes': true, 'IncludeBlocks': 'Preserve', 'UseTab': 'Never', 'ReflowComments': false, 'AllowBreakBeforeNoexceptSpecifier': 'OnlyWithParen', 'PenaltyReturnTypeOnItsOwnLine': 25}",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.default.includePath": [
+        "src"
+    ],
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.files.exclude": {
+        "build/**": true,
+    },
+    "python.analysis.exclude": [
+        "build/*"
+    ]
+}
