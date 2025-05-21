@@ -16,6 +16,11 @@ if [ $1 = "-b" ];
 then
     cmake --fresh -DGLFW_BUILD_EXAMPLES=TRUE ..
     cmake --build .
+elif [ $1 = "-d" ];
+then
+    cmake --fresh -DSOLVER_DEBUG=TRUE ..
+    cmake --build .
+
 elif [ $1 = "-r" ];
 then
     ./src/solver-rc;

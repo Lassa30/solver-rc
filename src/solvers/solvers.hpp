@@ -180,20 +180,26 @@ private:
   static std::vector<unsigned short> cornersMoveTable_;
   static void generateCornersMoveTable();
 
-  /*static members for pruning tables (depth % 3, packed)*/
-  static bool isFlipSliceTwistDepth3TableGenerated_;  // To be added if there's a generation function
+  /*static pruning tables*/
   static std::vector<uint32_t> flipSliceTwistDepth3_;
-  static void generateFlipSliceTwistDepth3Table();  // Example if needed
-
-  static bool isCornersUDEdgesDepth3TableGenerated_;
   static std::vector<uint32_t> cornersUDEdgesDepth3_;
-  static void generateCornersUDEdgesDepth3Table();
-
-  // Declared based on Python's None initialization, actual type/usage might be defined later
   static std::vector<unsigned char> cornSliceDepth_;
-  static std::vector<unsigned char> edgeSliceDepth_;
+  static std::vector<char> distance_;
+  static std::vector<unsigned short> phase2EdgeMergeTable_;  // Added for phase2_edgemerge table
 
-  /*static members for UD Edges Conjugation Table*/
+  static bool isFlipSliceTwistDepth3TableGenerated_;
+  static bool isCornersUDEdgesDepth3TableGenerated_;
+  static bool isCornSliceDepthTableGenerated_;
+  static bool isDistanceArrayGenerated_;
+  static bool isPhase2EdgeMergeTableGenerated_;  // Added flag for phase2_edgemerge table
+
+  /*static pruning table generation methods*/
+  static void generateCornersUDEdgesDepth3Table();
+  static void generateFlipSliceTwistDepth3Table();
+  static void generateCornSliceDepthTable();
+  static void generateDistanceArray();
+  static void generatePhase2EdgeMergeTable();  // Added generation method declaration
+
   static bool isUDEdgesConjTableGenerated_;
   static std::vector<unsigned short> udEdgesConjTable_;
   static void generateUDEdgesConjTable();
