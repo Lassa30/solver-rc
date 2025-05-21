@@ -61,6 +61,9 @@ public:
   EdgeCornerCube(const std::array<EdgeID, 12> &, const std::array<int, 12> &, const std::array<CornerID, 8> &,
                  const std::array<int, 8> &);
 
+  EdgeCornerCube(const EdgeCornerCube&);
+  EdgeCornerCube& operator=(const EdgeCornerCube&);
+
   /*movement related*/
   void multiplyCorners(const EdgeCornerCube &rhs);
   void multiplyEdges(const EdgeCornerCube &rhs);

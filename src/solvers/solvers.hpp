@@ -49,7 +49,7 @@ public:
 
   class CoordinateCube {
   public:
-    explicit CoordinateCube(KociembaSolver* solver);
+    CoordinateCube(KociembaSolver* solver);
 
     /*phase 1 getters*/
     int getTwist() const;
@@ -77,6 +77,15 @@ public:
 
     int getCornersUDEdgesDepth3(int ix);
 
+    // Symmetry-reduced coordinates for phase 1 and phase 2
+    int flipslice_classidx;  // Symmetry reduced flipslice coordinate for phase 1
+    int flipslice_sym;       // Symmetry of the flipslice coordinate
+    int flipslice_rep;       // Representative of the flipslice class
+
+    int corner_classidx;  // Symmetry reduced corner permutation coordinate for phase 2
+    int corner_sym;       // Symmetry of the corner coordinate
+    int corner_rep;       // Representative of the corner class
+
     struct phaseOne {
       phaseOne() : twist{SOLVED}, flip{SOLVED}, slice_sorted{SOLVED} {}
       phaseOne(int c1, int c2, int c3) : twist{c1}, flip{c2}, slice_sorted{c3} {}
@@ -97,6 +106,18 @@ public:
     static constexpr int SOLVED = 0;
     phaseOne coordsPhaseOne;
     phaseTwo coordsPhaseTwo;
+
+    // Update phase 1 coordinates when move is applied
+    void phase1Move(int m);
+
+    // Update phase 2 coordinates when move is applied
+    void phase2Move(int m);
+
+    // Compute the distance to the cube subgroup H where flip=slice=twist=0
+    int getDepthPhase1();
+
+    // Get distance to subgroup for phase 2
+    static int getDepthPhase2(int corners, int ud_edges);
 
   private:
     KociembaSolver* solver_;

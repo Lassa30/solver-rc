@@ -73,6 +73,16 @@ EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep, const std::arra
 EdgeCornerCube::EdgeCornerCube(const std::array<Edge, 12> &edges, const std::array<Corner, 8> &corners)
     : edges_{edges}, corners_{corners} {}
 
+EdgeCornerCube::EdgeCornerCube(const EdgeCornerCube& cube) : edges_{cube.edges_}, corners_{cube.corners_} {}
+
+EdgeCornerCube &EdgeCornerCube::operator=(const EdgeCornerCube & rhs) {
+  if (&rhs != this) {
+    edges_ = rhs.edges_;
+    corners_ = rhs.corners_;
+  }
+  return *this;
+}
+
 /*EdgeCornerCube main interface - movements and permutation product*/
 
 int EdgeCornerCube::calculateOrientation(int ori_lhs, int ori_rhs) {

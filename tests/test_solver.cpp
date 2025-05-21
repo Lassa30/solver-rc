@@ -24,6 +24,8 @@ TEST_CASE("Inverse") {
   std::string cubeString;
 
   auto invCube = solver.inverseCube();
+  auto solverCube = solver.getCube();
+  CHECK((solverCube == cube));
   CHECK((invCube == cube));
 
   // Checking inverse cube after applying some moves
@@ -131,4 +133,8 @@ TEST_CASE("Phase 2 Coordinate mappings") {
     CHECK(slice_sorted == 9155);
     CHECK(ud_edges == -1);  // -1 because slice_sorted >= 24
   }
+}
+
+TEST_CASE("Coordinates based on tables") {
+
 }
