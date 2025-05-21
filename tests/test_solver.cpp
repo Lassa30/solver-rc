@@ -112,6 +112,19 @@ TEST_CASE("Phase 1 Coordinate mappings") {
     CHECK(flip == 550);
     CHECK(slice_sorted == 9155);
   }
+  SUBCASE("Symmetry reduced coordinates") {
+    EdgeCornerCube cube{};
+    applyDefaultMoves(cube);
+    Kociemba::KociembaSolver solver{cube};
+
+    auto classidx = solver.coordCube.flipslice_classidx;
+    auto sym = solver.coordCube.flipslice_sym;
+    auto rep = solver.coordCube.flipslice_rep;
+
+    CHECK(classidx == 34156);
+    CHECK(sym == 5);
+    CHECK(rep == 182664);
+  }
 }
 
 TEST_CASE("Phase 2 Coordinate mappings") {
@@ -133,8 +146,17 @@ TEST_CASE("Phase 2 Coordinate mappings") {
     CHECK(slice_sorted == 9155);
     CHECK(ud_edges == -1);  // -1 because slice_sorted >= 24
   }
-}
+  SUBCASE("Symmetry reduced coordinates") {
+    EdgeCornerCube cube{};
+    applyDefaultMoves(cube);
+    Kociemba::KociembaSolver solver{cube};
 
-TEST_CASE("Coordinates based on tables") {
+    auto classidx = solver.coordCube.corner_classidx;
+    auto sym = solver.coordCube.corner_sym;
+    auto rep = solver.coordCube.corner_rep;
 
+    CHECK(classidx == 2219);
+    CHECK(sym == 9);
+    CHECK(rep == 6751);
+  }
 }

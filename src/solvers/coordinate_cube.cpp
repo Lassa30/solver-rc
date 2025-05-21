@@ -18,7 +18,7 @@ KociembaSolver::CoordinateCube::CoordinateCube(KociembaSolver* solver) : solver_
   int slice_part = slice_sorted / PERM_4;
   int flipslice_idx = FLIP_MAX * slice_part + flip;
   flipslice_classidx = flipSliceClassIdx_[flipslice_idx];
-  flipslice_sym = flipSliceSym_[flipslice_idx];
+  flipslice_sym = flipSliceSym_[flipslice_classidx];
   flipslice_rep = flipSliceRep_[flipslice_classidx];
 
   // // Initialize symmetry-reduced coordinates for phase 2
@@ -28,7 +28,11 @@ KociembaSolver::CoordinateCube::CoordinateCube(KociembaSolver* solver) : solver_
   corner_rep = cornerRep_[corner_classidx];
 }
 
-/*Coordinate mappings between EdgeCornerCube and CoordinateCube*/
+/* 
+***********************************************************************************************************************
+*  Coordinate mappings between EdgeCornerCube and CoordinateCube                                                      *
+***********************************************************************************************************************
+*/
 int KociembaSolver::CoordinateCube::getTwist() const {
   int twist = 0;
   for (int i = static_cast<int>(CornerID::URF); i < static_cast<int>(CornerID::DRB); i++) {
@@ -58,7 +62,7 @@ void KociembaSolver::CoordinateCube::setTwist(int twist) {
   // This should be:
   solver_->coordCube.coordsPhaseOne.twist = getTwist();  // Or simply the input `twist` if it's canonical
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getFlip() const {
   int flip = 0;
   for (int i = static_cast<int>(EdgeID::UR); i < static_cast<int>(EdgeID::BR); i++) {
@@ -84,7 +88,7 @@ void KociembaSolver::CoordinateCube::setFlip(int flip) {
   }
   solver_->coordCube.coordsPhaseOne.flip = getFlip();  // Or input `flip`
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getSlice() const {
   int a = 0;
   int x = 0;
@@ -135,7 +139,7 @@ void KociembaSolver::CoordinateCube::setSlice(int idx) {
   // Slice sorted is dependent on slice, so it should be updated too, or this setSlice is for specific table generation.
   // For now, just setting slice. If slice_sorted needs update, it should be explicit.
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getSliceSorted() const {
   int a = 0, x = 0;
   std::array<EdgeID, 4> edge4{};
@@ -216,7 +220,7 @@ void KociembaSolver::CoordinateCube::setSliceSorted(int idx) {
   }
   solver_->coordCube.coordsPhaseOne.slice_sorted = idx;
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getUEdges() const {
   int a = 0, x = 0;
   std::array<EdgeID, 4> edge4{};
@@ -315,7 +319,7 @@ void KociembaSolver::CoordinateCube::setUEdges(int idx) {
   }
   solver_->coordCube.coordsPhaseTwo.u_edges = idx;
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getDEdges() const {
   int a = 0;
   int x = 0;
@@ -411,7 +415,7 @@ void KociembaSolver::CoordinateCube::setDEdges(int idx) {
   }
   solver_->coordCube.coordsPhaseTwo.d_edges = idx;
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getCorners() const {
   std::array<CornerID, 8> perm;
   for (int i = 0; i < 8; ++i) {
@@ -461,7 +465,7 @@ void KociembaSolver::CoordinateCube::setCorners(int idx) {
   }
   solver_->coordCube.coordsPhaseTwo.corners = idx;
 }
-
+/* *******************************************************************************************************************/
 int KociembaSolver::CoordinateCube::getUDEdges() const {
   // This coordinate is valid only if slice edges are in the slice (SliceSorted < 24)
   // The original Python code checks if cc.get_slice_sorted() == 0 for this.
@@ -559,7 +563,7 @@ void KociembaSolver::CoordinateCube::setUDEdges(int idx) {
   }
   solver_->coordCube.coordsPhaseTwo.ud_edges = idx;
 }
-
+/* *******************************************************************************************************************/
 void KociembaSolver::CoordinateCube::phase1Move(int m) {
   // Update phase 1 coordinates
   coordsPhaseOne.twist = solver_->twistMoveTable_[NUMBER_OF_MOVES * coordsPhaseOne.twist + m];
