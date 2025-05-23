@@ -9,7 +9,7 @@
     ],
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.files.exclude": {
-        "build/**": true,
+        "bui/**": true,
     },
     "python.analysis.exclude": [
         "build/*"

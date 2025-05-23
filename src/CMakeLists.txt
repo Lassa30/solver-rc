@@ -14,12 +14,12 @@ target_include_directories(imgui PUBLIC
 file(GLOB SOLVER_CUBE_SOURCES "${CMAKE_SOURCE_DIR}/src/cube/*.[ch]pp")
 add_library(cube ${SOLVER_CUBE_SOURCES})
 
-# solvers internal library
-file(GLOB SOLVER_SOLVERS_SOURCES "${CMAKE_SOURCE_DIR}/src/solvers/*.[ch]pp")
-add_library(solvers ${SOLVER_SOLVERS_SOURCES})
-target_compile_definitions(solvers PRIVATE "PRECOMPUTED_FILES_INSTALL_DIR=\"${PRECOMPUTED_DIR}\"")
+# kociemba-solver internal library
+file(GLOB KOCIEMBA_SOLVER_SOURCES "${CMAKE_SOURCE_DIR}/src/kociemba-solver/*.[ch]pp")
+add_library(kociemba-solver ${KOCIEMBA_SOLVER_SOURCES})
+target_compile_definitions(kociemba-solver PRIVATE "PRECOMPUTED_FILES_INSTALL_DIR=\"${PRECOMPUTED_DIR}\"")
 
-target_link_libraries(cube solvers)
+target_link_libraries(cube kociemba-solver)
 
 # solver-rc main
 add_library(utils INTERFACE utils.hpp)

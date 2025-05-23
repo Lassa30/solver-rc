@@ -1,5 +1,5 @@
 #include <cube/cube.hpp>
-#include <solvers/solvers.hpp>
+#include <kociemba-solver/solver.hpp>
 
 #include <iostream>
 

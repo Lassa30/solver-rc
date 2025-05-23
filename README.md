@@ -7,5 +7,4 @@ sudo apt update
 sudo apt install libopencv-dev
 ```
 
-
-List of precompute tables to do:
+For glad to work you need to check whether `Jinja2` is installed for your python interpreter

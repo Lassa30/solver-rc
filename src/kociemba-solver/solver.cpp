@@ -1,5 +1,5 @@
 #include <cube/cube.hpp>
-#include <solvers/solvers.hpp>
+#include <kociemba-solver/solver.hpp>
 
 #include <array>
 #include <bitset>
@@ -152,5 +152,7 @@ void KociembaSolver::setCornersUDEdgesDepth3(int ix, unsigned char value) {
   cornersUDEdgesDepth3_[base_idx] &= mask;
   cornersUDEdgesDepth3_[base_idx] |= (static_cast<uint32_t>(value & 3) << shift);
 }
+
+// TODO: write the solver itself, it should be quite easy now!
 
 }  // namespace Kociemba

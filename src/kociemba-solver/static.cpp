@@ -1,6 +1,6 @@
 #include <cube/cube.hpp>
 #include <iostream>
-#include <solvers/solvers.hpp>
+#include <kociemba-solver/solver.hpp>
 
 namespace Kociemba {
 

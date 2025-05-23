@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 
 project(solver-rc LANGUAGES CXX C)
 include(FetchContent)
@@ -10,7 +10,6 @@ set(FETCHCONTENT_QUIET OFF)
 set(OpenGL_GL_PREFERENCE "GLVND")
 set(PRECOMPUTED_DIR "${CMAKE_SOURCE_DIR}/precomputed")
 
-# TODO: remove later
 option(SOLVER_DEBUG "Build with debug information" OFF)
 if(${SOLVER_DEBUG})
     set(CMAKE_BUILD_TYPE Debug)
@@ -41,12 +40,13 @@ FetchContent_Declare(
     GIT_TAG v2.0.6
     GIT_PROGRESS TRUE
 )
+FetchContent_GetProperties(glad)
 if(NOT glad_POPULATED)
     message("Fetching glad")
     FetchContent_MakeAvailable(glad)
 
     add_subdirectory("${glad_SOURCE_DIR}/cmake" glad_cmake)
-    glad_add_library(glad REPRODUCIBLE EXCLUDE_FROM_ALL LOADER API gl:core=4.6)
+    glad_add_library(glad EXCLUDE_FROM_ALL LOADER API gl:core=4.6)
 endif()
 
 # glm
