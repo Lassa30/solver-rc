@@ -35,6 +35,12 @@ class KociembaSolver {
 public:
   explicit KociembaSolver(const EdgeCornerCube&);
 
+  /*main solve function*/
+  std::string solve();
+
+  // New multithreaded solve function
+  std::string solveMultithreaded(int maxLength = 20, int timeout = 3);
+
   inline EdgeCornerCube getCube() const { return ecCube_; }
   std::string toString() const;
 
@@ -46,9 +52,9 @@ public:
   bool hasRotationalSymmetry(const std::bitset<96>&) const;
   bool hasAntiSymmetry(const std::bitset<96>&) const;
 
-  /*main solve function: idk the interface yet*/
-  std::string solve();
-
+  /* **************************************************************************
+  begin: coordinate cube class
+  ****************************************************************************/
   class CoordinateCube {
   public:
     CoordinateCube(KociembaSolver* solver);
@@ -133,10 +139,16 @@ public:
     template <typename Container>
     static void rotate_left(Container& arr, int left, int right);
   };
+  /* **************************************************************************
+    end: coordinate cube class
+    ****************************************************************************/
 
   CoordinateCube coordCube;
 
 private:
+  /*private members to implement solve() method*/
+  
+
   /*members for cube symmetries generation*/
   static bool isBasicSymCubesGenerated_;
   static std::array<EdgeCornerCube, static_cast<int>(BasicSymmetry::COUNT)> basicSymCubes_;
@@ -207,20 +219,20 @@ private:
   static std::vector<uint32_t> cornersUDEdgesDepth3_;
   static std::vector<unsigned char> cornSliceDepth_;
   static std::vector<char> distance_;
-  static std::vector<unsigned short> phase2EdgeMergeTable_;  // Added for phase2_edgemerge table
+  static std::vector<unsigned short> phase2EdgeMergeTable_;
 
   static bool isFlipSliceTwistDepth3TableGenerated_;
   static bool isCornersUDEdgesDepth3TableGenerated_;
   static bool isCornSliceDepthTableGenerated_;
   static bool isDistanceArrayGenerated_;
-  static bool isPhase2EdgeMergeTableGenerated_;  // Added flag for phase2_edgemerge table
+  static bool isPhase2EdgeMergeTableGenerated_;
 
   /*static pruning table generation methods*/
   static void generateCornersUDEdgesDepth3Table();
   static void generateFlipSliceTwistDepth3Table();
   static void generateCornSliceDepthTable();
   static void generateDistanceArray();
-  static void generatePhase2EdgeMergeTable();  // Added generation method declaration
+  static void generatePhase2EdgeMergeTable();
 
   static bool isUDEdgesConjTableGenerated_;
   static std::vector<unsigned short> udEdgesConjTable_;

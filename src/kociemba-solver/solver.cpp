@@ -154,5 +154,12 @@ void KociembaSolver::setCornersUDEdgesDepth3(int ix, unsigned char value) {
 }
 
 // TODO: write the solver itself, it should be quite easy now!
+/* **************************************************************************
+begin: solver part responsible for finding the solution
+****************************************************************************/
+
+/* **************************************************************************
+end: solver part responsible for finding the solution
+****************************************************************************/
 
 }  // namespace Kociemba
