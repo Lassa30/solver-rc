@@ -73,9 +73,9 @@ EdgeCornerCube::EdgeCornerCube(const std::array<EdgeID, 12> &ep, const std::arra
 EdgeCornerCube::EdgeCornerCube(const std::array<Edge, 12> &edges, const std::array<Corner, 8> &corners)
     : edges_{edges}, corners_{corners} {}
 
-EdgeCornerCube::EdgeCornerCube(const EdgeCornerCube& cube) : edges_{cube.edges_}, corners_{cube.corners_} {}
+EdgeCornerCube::EdgeCornerCube(const EdgeCornerCube &cube) : edges_{cube.edges_}, corners_{cube.corners_} {}
 
-EdgeCornerCube &EdgeCornerCube::operator=(const EdgeCornerCube & rhs) {
+EdgeCornerCube &EdgeCornerCube::operator=(const EdgeCornerCube &rhs) {
   if (&rhs != this) {
     edges_ = rhs.edges_;
     corners_ = rhs.corners_;
@@ -169,6 +169,61 @@ int EdgeCornerCube::edgeParity() const {
     }
   }
   return parity % 2;
+}
+
+int EdgeCornerCube::fromString(const std::string &str) {
+  /*basic checks*/
+  if (str.size() != 54) {
+    return 1;
+  }
+  std::array<(int)ColorID::COUNT> colorsCounter = {0, 0, 0, 0, 0, 0};
+  bool hasInvalid = false;
+  for (const auto c & : str) {
+    switch (c) {
+      case 'U':
+        colorsCounter[(int)ColorID::U] += 1;
+        break;
+      case 'R':
+        colorsCounter[(int)ColorID::R] += 1;
+        break;
+      case 'F':
+        colorsCounter[(int)ColorID::F] += 1;
+        break;
+      case 'D':
+        colorsCounter[(int)ColorID::D] += 1;
+        break;
+      case 'L':
+        colorsCounter[(int)ColorID::L] += 1;
+        break;
+      case 'B':
+        colorsCounter[(int)ColorID::B] += 1;
+        break;
+      default:
+        hasInvalid = true;
+        break;
+    }
+    (c)
+  }
+  if (hasInvalid) {
+    return 2;
+  }
+
+  bool allCountersAreNine =
+      std::all_of(colorsCounter.begin(), colorsCounter.end(), [](int counter) { return counter == 9; });
+  if (!allCountersAreNine) {
+    return 3;
+  }
+
+  /*edges and corners*/
+  cube = EdgeCornerCube();
+  const std::array<int, 8> cornerPos;
+  const std::array<int, 12> edgePos;
+  for (int cornerIdx = 0; cornerIdx < (int)CornerID::COUNT; cornerIdx++) { 
+  }
+
+  /*final*/
+  *this = EdgeCornerCube(edges, corners);
+  return 0;
 }
 
 }  // namespace Cube

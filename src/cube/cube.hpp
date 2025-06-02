@@ -87,7 +87,7 @@ public:
 
   /*implement later if required*/
   // bool isValidCube() const;
-
+  int fromString(const std::string&);
   std::string toString() const;
 
   static inline const EdgeCornerCube &getMoveCube(SideMovement move) { return moveCubes_[(int)move]; }

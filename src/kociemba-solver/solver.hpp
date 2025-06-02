@@ -36,7 +36,7 @@ public:
   explicit KociembaSolver(const EdgeCornerCube&);
 
   /*main solve function*/
-  std::string solve();
+  std::vector<SideMovement> solve();
 
   // New multithreaded solve function
   std::string solveMultithreaded(int maxLength = 20, int timeout = 3);
@@ -245,5 +245,7 @@ private:
 
   static std::string getPrecomputedPath(const std::string& filename);
 };
+
+std::vector<SideMovement> solve(const std::string&);
 
 }  // namespace Kociemba
