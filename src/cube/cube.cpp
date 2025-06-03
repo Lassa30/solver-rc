@@ -172,57 +172,57 @@ int EdgeCornerCube::edgeParity() const {
 }
 
 int EdgeCornerCube::fromString(const std::string &str) {
-  /*basic checks*/
-  if (str.size() != 54) {
-    return 1;
-  }
-  std::array<(int)ColorID::COUNT> colorsCounter = {0, 0, 0, 0, 0, 0};
-  bool hasInvalid = false;
-  for (const auto c & : str) {
-    switch (c) {
-      case 'U':
-        colorsCounter[(int)ColorID::U] += 1;
-        break;
-      case 'R':
-        colorsCounter[(int)ColorID::R] += 1;
-        break;
-      case 'F':
-        colorsCounter[(int)ColorID::F] += 1;
-        break;
-      case 'D':
-        colorsCounter[(int)ColorID::D] += 1;
-        break;
-      case 'L':
-        colorsCounter[(int)ColorID::L] += 1;
-        break;
-      case 'B':
-        colorsCounter[(int)ColorID::B] += 1;
-        break;
-      default:
-        hasInvalid = true;
-        break;
-    }
-    (c)
-  }
-  if (hasInvalid) {
-    return 2;
-  }
+  // /*basic checks*/
+  // if (str.size() != 54) {
+  //   return 1;
+  // }
+  // std::array<(int)ColorID::COUNT> colorsCounter = {0, 0, 0, 0, 0, 0};
+  // bool hasInvalid = false;
+  // for (const auto c & : str) {
+  //   switch (c) {
+  //     case 'U':
+  //       colorsCounter[(int)ColorID::U] += 1;
+  //       break;
+  //     case 'R':
+  //       colorsCounter[(int)ColorID::R] += 1;
+  //       break;
+  //     case 'F':
+  //       colorsCounter[(int)ColorID::F] += 1;
+  //       break;
+  //     case 'D':
+  //       colorsCounter[(int)ColorID::D] += 1;
+  //       break;
+  //     case 'L':
+  //       colorsCounter[(int)ColorID::L] += 1;
+  //       break;
+  //     case 'B':
+  //       colorsCounter[(int)ColorID::B] += 1;
+  //       break;
+  //     default:
+  //       hasInvalid = true;
+  //       break;
+  //   }
+  //   (c)
+  // }
+  // if (hasInvalid) {
+  //   return 2;
+  // }
 
-  bool allCountersAreNine =
-      std::all_of(colorsCounter.begin(), colorsCounter.end(), [](int counter) { return counter == 9; });
-  if (!allCountersAreNine) {
-    return 3;
-  }
+  // bool allCountersAreNine =
+  //     std::all_of(colorsCounter.begin(), colorsCounter.end(), [](int counter) { return counter == 9; });
+  // if (!allCountersAreNine) {
+  //   return 3;
+  // }
 
-  /*edges and corners*/
-  cube = EdgeCornerCube();
-  const std::array<int, 8> cornerPos;
-  const std::array<int, 12> edgePos;
-  for (int cornerIdx = 0; cornerIdx < (int)CornerID::COUNT; cornerIdx++) { 
-  }
+  // /*edges and corners*/
+  // cube = EdgeCornerCube();
+  // const std::array<int, 8> cornerPos;
+  // const std::array<int, 12> edgePos;
+  // for (int cornerIdx = 0; cornerIdx < (int)CornerID::COUNT; cornerIdx++) { 
+  // }
 
-  /*final*/
-  *this = EdgeCornerCube(edges, corners);
+  // /*final*/
+  // *this = EdgeCornerCube(edges, corners);
   return 0;
 }
 

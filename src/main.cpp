@@ -1,5 +1,3 @@
-// #include <cube/cube.hpp>
-// #include <kociemba-solver/solver.hpp>
 #include <utils.hpp>
 
 #include <backends/imgui_impl_glfw.h>
@@ -14,6 +12,7 @@
 
 #include <array>
 #include <chrono>
+#include <cmath>
 #include <iostream>
 #include <random>
 
@@ -82,16 +81,20 @@ GLuint compileShaders() {
   return shaderProgram;
 }
 
-void render() {
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
-}
+/*CUBE: BEGIN*/
+class RubixCubie {
+public:
+};
 
-/*Variables*/
-static float x = 0.2f;
+class RubixCube {
+public:
+};
 
-static float Vertices[3][7] = {{-x, x, 0, 1, 0, 0, 1}, {x, x, 0, 1, 0, 0, 1}, {x, -x, 0, 1, 0, 0, 1}};
+class RubixRenderer {
+public:
+private:
+};
+/*CUBE: END*/
 
 int main() {
   // clang-format off
@@ -100,7 +103,6 @@ int main() {
   }
   int xSideSize = 800, ySideSize = 600;
   GLFWwindow *window = glfwCreateWindow(xSideSize, ySideSize, "Rubik's Cube Solver", nullptr, nullptr);
-
   if (!window) {
     return 1;
   }
@@ -113,6 +115,7 @@ int main() {
         glViewport(0, 0, width, height);
     }
   );
+  /*
   glfwSetKeyCallback(
     window, 
     [](GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -144,6 +147,7 @@ int main() {
       glfwSetWindowSize(window, width, height);
     }
   });
+  */
   // clang-format on
 
   // window creation
@@ -159,6 +163,51 @@ int main() {
   auto shaderProgram = compileShaders();
   glUseProgram(shaderProgram);
 
+  // clang-format off
+  float Vertices[] = {
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+  };
+  // clang-format on
   // init buffer
   GLuint VAO, VBO;
 
@@ -176,10 +225,14 @@ int main() {
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
-  // main loop
+  static float x = 0.2f;
+  static constexpr int CUBE_VERTICES = 36;
   while (!glfwWindowShouldClose(window)) {
-    render();
-
+    /*rendering*/
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, CUBE_VERTICES);
+    /*update*/
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
@@ -188,12 +241,3 @@ int main() {
   glfwTerminate();
   return 0;
 }
-
-/*
-[Experiments]
-1) Compare performance:
-- Compute ModelViewProjection matrices each frame on CPU and the final result on
-GPU <i.e. MVP * vec4(...)>
-- Give everything to GPU and compute it there < i.e. projection * view * model *
-vec4(...) >
-*/
